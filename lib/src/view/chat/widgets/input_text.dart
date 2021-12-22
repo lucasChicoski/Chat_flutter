@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../service/chat_mock_service.dart';
+
 class InputTextCustom extends StatelessWidget {
-  const InputTextCustom({Key? key}) : super(key: key);
+  final Function(String?)? myMenssage;
+  final VoidCallback? sendMessage;
+  final Function(String?)? onSubmit;
+  const InputTextCustom({
+    Key? key,
+    this.myMenssage,
+    this.sendMessage,
+    this.onSubmit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
       child: TextField(
+        onChanged: myMenssage,
+        onSubmitted: onSubmit,
         decoration: InputDecoration(
-          suffixIcon: IconButton(onPressed: (){}, icon: Icon(Icons.send_rounded)),
+            suffixIcon: IconButton(
+                onPressed: sendMessage, icon: Icon(Icons.send_rounded)),
             filled: true,
             fillColor: Color(0xff9ccbe3),
             hintText: 'Digite uma mensagem',
