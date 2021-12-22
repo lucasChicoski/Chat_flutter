@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import '../service/chat_mock_service.dart';
 
 class InputTextCustom extends StatelessWidget {
   final Function(String?)? myMenssage;

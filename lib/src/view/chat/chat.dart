@@ -1,10 +1,15 @@
-import 'package:chat/src/view/chat/service/chat_mock_service.dart';
-import 'package:chat/src/view/chat/service/chat_service.dart';
+import 'dart:math';
+
 import 'package:chat/src/view/chat/widgets/card_message.dart';
 import 'package:chat/src/view/chat/widgets/input_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
+import '../../controllers/chat_controller.dart';
 import '../../models/message_model.dart';
+
+ChatController chatController = GetIt.I<ChatController>();
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -14,64 +19,56 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  String? someMessage;
+  int? userId;
 
-  Future<void> _sendMessage() async {
-    ChatService().save(someMessage!, '0');
+  @override
+  void initState() {
+    var randomNumber = Random();
+    int idGenerated = randomNumber.nextInt(1000);
+    chatController.setIdUser(idGenerated);
+
+    setState(() {
+      userId = idGenerated;
+    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ChatMockService abobrinha = ChatMockService();
-    return StreamBuilder<List<MessageModel>>(
-        stream: ChatService().messagesStream(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Container(
-                alignment: Alignment.center,
-                child: Text("Não existe conversa ainda"));
-          } else {
-            final mensagem = snapshot.data!;
-            return Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      child: ListView.builder(
-                        itemCount: mensagem.length,
-                        itemBuilder: ((context, index) {
-                          return CardMessage(
-                            menssage: mensagem[index].menssage,
-                          );
-                        }),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    // color: Colors.yellow,
-                    height: 80,
-                    child: InputTextCustom(
-                      sendMessage: _sendMessage,
-                      onSubmit: (value) {
-                        print('object');
-                        _sendMessage();
-                      },
-                      myMenssage: (menssage) {
-                        setState(() {
-                          someMessage = menssage;
-                          print(someMessage);
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        });
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: Column(
+        children: [
+          Expanded(
+            child: Observer(builder: (_) {
+              return Container(
+                width: double.infinity,
+                child: ListView.builder(
+                  itemCount: chatController.messages.length,
+                  itemBuilder: ((context, index) {
+                    return Row(
+                      mainAxisAlignment: chatController.isMe,
+                      children: [
+                        CardMessage(
+                          menssage: chatController.messages[index].menssage,
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              );
+            }),
+          ),
+          Container(
+            // color: Colors.yellow,
+            height: 80,
+            child: InputTextCustom(
+              sendMessage: chatController.sendMessage,
+              myMenssage: chatController.setMessage,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

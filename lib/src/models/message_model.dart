@@ -4,5 +4,5 @@ class MessageModel {
     required this.menssage,
   });
   String menssage;
-  String idUser;
+  int idUser;
 }
