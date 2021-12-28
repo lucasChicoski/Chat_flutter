@@ -1,4 +1,8 @@
+import 'package:chat/src/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+
+ChatController _chatController = GetIt.I<ChatController>();
 
 class InputTextCustom extends StatelessWidget {
   final Function(String?)? myMenssage;
@@ -18,7 +22,9 @@ class InputTextCustom extends StatelessWidget {
       child: TextField(
         onChanged: myMenssage,
         onSubmitted: onSubmit,
+        controller: _chatController.textEditingController,
         decoration: InputDecoration(
+
             suffixIcon: IconButton(
                 onPressed: sendMessage, icon: Icon(Icons.send_rounded)),
             filled: true,

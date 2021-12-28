@@ -47,6 +47,21 @@ mixin _$ChatController on _ChatControllerBase, Store {
     });
   }
 
+  final _$indexTesteAtom = Atom(name: '_ChatControllerBase.indexTeste');
+
+  @override
+  int get indexTeste {
+    _$indexTesteAtom.reportRead();
+    return super.indexTeste;
+  }
+
+  @override
+  set indexTeste(int value) {
+    _$indexTesteAtom.reportWrite(value, super.indexTeste, () {
+      super.indexTeste = value;
+    });
+  }
+
   final _$_ChatControllerBaseActionController =
       ActionController(name: '_ChatControllerBase');
 
@@ -88,6 +103,7 @@ mixin _$ChatController on _ChatControllerBase, Store {
     return '''
 message: ${message},
 idUser: ${idUser},
+indexTeste: ${indexTeste},
 isMe: ${isMe}
     ''';
   }

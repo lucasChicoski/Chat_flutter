@@ -26,7 +26,7 @@ class _ChatState extends State<Chat> {
     var randomNumber = Random();
     int idGenerated = randomNumber.nextInt(1000);
     chatController.setIdUser(idGenerated);
-
+    chatController.listenMessages();
     setState(() {
       userId = idGenerated;
     });
@@ -46,9 +46,11 @@ class _ChatState extends State<Chat> {
                 child: ListView.builder(
                   itemCount: chatController.messages.length,
                   itemBuilder: ((context, index) {
+                    chatController.indexTeste = index;
                     return Row(
                       mainAxisAlignment: chatController.isMe,
                       children: [
+                        //  ElevatedButton(onPressed: chatController.teste , child: Text('click')),
                         CardMessage(
                           menssage: chatController.messages[index].menssage,
                         ),
@@ -63,6 +65,7 @@ class _ChatState extends State<Chat> {
             // color: Colors.yellow,
             height: 80,
             child: InputTextCustom(
+              
               sendMessage: chatController.sendMessage,
               myMenssage: chatController.setMessage,
             ),
